@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.12"
+python-dotenv = "^1.0.1"
+django = "^4.2"
+redis = "^5.0.8"
 
 
 [build-system]
