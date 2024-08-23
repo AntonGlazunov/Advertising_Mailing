@@ -1,8 +1,18 @@
 from django import forms
 from django.forms import TextInput
 
-from mailing.models import Mailing
+from mailing.models import Mailing, Client
 
+
+# class VisualFormMixin:
+#
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.helper = FormHelper()
+#         self.helper.form_class = 'blueForms'
+#         self.helper.form_method = 'post'
+#         self.helper.form_action = 'submit_survey'
+#         self.helper.form_tag = False
 
 class MailingForm(forms.ModelForm):
     class Meta:
@@ -23,3 +33,8 @@ class MailingForm(forms.ModelForm):
         else:
             raise forms.ValidationError('Ошибка, не верные данные')
 
+
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ('contact_email', 'full_name', 'comment')
