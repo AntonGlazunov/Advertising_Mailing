@@ -18,6 +18,7 @@ class Client(models.Model):
 
 class Mailing(models.Model):
     first_dispatch = models.DateField(auto_now=False, verbose_name='Дата первой отправки', **NULLABLE)
+    last_mailing = models.DateField(auto_now=False, verbose_name='Дата последней отправки', **NULLABLE)
     periodicity = models.IntegerField(verbose_name='Периодичность')
     status = models.CharField(max_length=15, verbose_name='Статус')
     client = models.ForeignKey('mailing.Client', verbose_name='Клиент', on_delete=models.CASCADE, **NULLABLE)
