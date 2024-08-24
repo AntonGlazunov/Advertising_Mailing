@@ -22,7 +22,7 @@ class Mailing(models.Model):
     last_mailing = models.DateField(auto_now=False, verbose_name='Дата последней отправки', **NULLABLE)
     periodicity = models.IntegerField(verbose_name='Периодичность')
     status = models.CharField(max_length=15, verbose_name='Статус')
-    mail = models.OneToOneField('mailing.Mail', verbose_name='Сообщение', on_delete=models.CASCADE, **NULLABLE)
+    number_clients = models.IntegerField(default=0, verbose_name='Колличество клиентов')
     last_dispatch = models.ForeignKey('mailing.LastDispatch', verbose_name='Последняя рассылка',
                                       on_delete=models.CASCADE, **NULLABLE)
 
@@ -37,6 +37,7 @@ class Mailing(models.Model):
 class Mail(models.Model):
     subject_mail = models.CharField(max_length=100, verbose_name='Тема письма')
     text_mail = models.TextField(verbose_name='Текст письма')
+    mailing = models.OneToOneField('mailing.Mailing', verbose_name='Сообщение', on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.subject_mail} {self.text_mail}'
@@ -47,7 +48,7 @@ class Mail(models.Model):
 
 
 class LastDispatch(models.Model):
-    date_last_dispatch = models.DateField(auto_now=False, verbose_name='Дата последней попытки', **NULLABLE)
+    date_last_dispatch = models.DateField(auto_now=False, verbose_name='Дата последней отправки', **NULLABLE)
     status = models.BooleanField(default=True, verbose_name='Статус отправки')
     mail_server_response = models.TextField(verbose_name='Ответ почтнового сервера', **NULLABLE)
 

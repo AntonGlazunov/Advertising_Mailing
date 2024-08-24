@@ -1,0 +1,18 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+<div class="col-12">
+    <div class="row">
+        <div class="col-12">
+            <p>Рассылка создана, хотите ввести список клиентов сейчас или сделаете это позже?</p>
+        </div>
+            <div class="col-12">
+                <div class="btn-group">
+                    <a href="#" class="btn btn-primary">Сейчас</a>
+                    <a href="{% url 'mailing:home' %}" class="btn btn-primary">Позже</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
