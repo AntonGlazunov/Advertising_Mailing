@@ -6,18 +6,28 @@
     <form method="post">
         {% csrf_token %}
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <div class="card">
                     <div class="card-body">
                         {% crispy form %}
                     </div>
                 </div>
             </div>
-            <div class="col-6">
+            <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        {{ formset.management_form }}
-                        {% for form in formset.forms %}
+                        {{ formset_mail.management_form }}
+                        {% for form in formset_mail.forms %}
+                        {% crispy form %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="card">
+                    <div class="card-body">
+                        {{ formset_client.management_form }}
+                        {% for form in formset_client.forms %}
                         {% crispy form %}
                         {% endfor %}
                     </div>

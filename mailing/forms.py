@@ -3,7 +3,7 @@ from crispy_forms.layout import Layout, Fieldset, Submit
 from django import forms
 from django.forms import TextInput
 
-from mailing.models import Mailing, Mail
+from mailing.models import Mailing, Mail, Client
 
 
 class VisualFormMixin:
@@ -21,12 +21,12 @@ class MailingForm(VisualFormMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper.layout = Layout(
-            Fieldset('Рассылка', 'first_dispatch', 'last_mailing', 'periodicity', 'number_clients', ),
+            Fieldset('Рассылка', 'first_dispatch', 'last_mailing', 'periodicity', ),
             Submit('submit', 'Сохранить', css_class='button white'), )
 
     class Meta:
         model = Mailing
-        fields = ('first_dispatch', 'last_mailing', 'periodicity', 'number_clients')
+        fields = ('first_dispatch', 'last_mailing', 'periodicity')
         widgets = {
             'first_dispatch': TextInput(attrs={'placeholder': 'Введите дату первой отправки'}),
             'last_mailing': TextInput(attrs={'placeholder': 'Введите дату последней отправки'}),
@@ -50,7 +50,7 @@ class MailForm(VisualFormMixin, forms.ModelForm):
         model = Mail
         fields = ('subject_mail', 'text_mail')
 
-# class ClientForm(forms.ModelForm):
-#     class Meta:
-#         model = Client
-#         fields = ('contact_email', 'full_name', 'comment')
+class ClientForm(forms.ModelForm):
+    class Meta:
+        model = Client
+        fields = ('contact_email', 'full_name', 'comment')
