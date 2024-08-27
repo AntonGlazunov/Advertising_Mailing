@@ -8,11 +8,12 @@
             <p class="card-text"> Начало рассылки: {{ mailing.first_dispatch }}, Окончание рассылки: {{ mailing.last_mailing }} </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Посмотреть</button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary">Редактировать
-                    </button>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'mailing:detail_mailing' mailing.pk %}">Посмотреть</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="{% url 'mailing:update_mailing' mailing.pk %}">Редактировать
+                    </a>
+                    <a class="btn btn-danger" href="{% url 'mailing:delete_mailing' mailing.pk %}">Удалить
+                    </a>
                 </div>
-                <small class="text-muted">9 минут</small>
             </div>
         </div>
     </div>

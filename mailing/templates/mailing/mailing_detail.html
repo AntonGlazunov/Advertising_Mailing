@@ -1,0 +1,17 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+<div class="col-12">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">{{ object.first_dispatch }}</li>
+                    <li class="list-group-item">{{ object.first_dispatch }}</li>
+                    <li class="list-group-item">{{ periodicity }}</li>
+                    <li class="list-group-item">{{ subject_text }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
