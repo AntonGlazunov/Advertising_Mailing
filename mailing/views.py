@@ -10,7 +10,7 @@ from mailing.models import Mailing, Mail, Client
 class MailingCreateView(CreateView):
     model = Mailing
     form_class = MailingForm
-    success_url = reverse_lazy('mailing:confirm_create_mailing')
+    success_url = reverse_lazy('mailing:mailing_list')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
@@ -96,5 +96,3 @@ class MailingDeleteView(DeleteView):
     success_url = reverse_lazy('mailing:mailing_list')
 
 
-def confirm_mailing(request):
-    return render(request, 'mailing/conf_create_mailing.html')
