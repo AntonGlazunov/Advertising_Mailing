@@ -1,0 +1,34 @@
+<!doctype html>
+{% load static %}
+<html lang="ru" prefix="og: http://ogp.me/ns#">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="generator" content="Hugo 0.84.0">
+    <title>Catalog</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-grid.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-grid.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-reboot.css' %}" rel="stylesheet">
+    <link href="{% static 'css/bootstrap-reboot.min.css' %}" rel="stylesheet">
+</head>
+<body>
+{% include 'mailing/includes/inc_main_menu.html' %}
+
+<main>
+    <div class="album py-5 bg-light">
+        <div class="container">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+                {% block content %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</main>
+{% include 'mailing/includes/inc_footer.html' %}
+
+</body>
+</html>
