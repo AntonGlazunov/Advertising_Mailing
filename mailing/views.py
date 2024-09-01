@@ -1,10 +1,11 @@
 from django.forms import inlineformset_factory
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
+from mailing import scheduler
 from mailing.forms import MailingForm, MailForm, ClientForm
 from mailing.models import Mailing, Mail, Client
+from mailing.services import planning_mailing
 
 
 class MailingCreateView(CreateView):
@@ -22,19 +23,18 @@ class MailingCreateView(CreateView):
         else:
             context_data['formset_client'] = ClientFormset(instance=self.object)
             context_data['formset_mail'] = MailFormset(instance=self.object)
-
         return context_data
 
     def form_valid(self, form):
         formset_client = self.get_context_data()['formset_client']
         formset_mail = self.get_context_data()['formset_mail']
         self.object = form.save()
-        if formset_client.is_valid() and formset_mail.is_valid():
+        if formset_mail.is_valid() and formset_client.is_valid():
             formset_mail.instance = self.object
+            formset_mail.save()
             formset_client.instance = self.object
             formset_client.save()
-            formset_mail.save()
-
+            planning_mailing(self.object)
         return super().form_valid(form)
 
 
@@ -45,10 +45,20 @@ class MailingListView(ListView):
 class MailingDetailView(DetailView):
     model = Mailing
 
+
+
+    # def post(self, request, pk):
+    #     if request.method == 'POST':
+    #         mailing = Mailing.objects.all()
+    #         print(mailing)
+    #         # clients = Client.objects.filter(mailing=mailing).values('contact_email')
+    #         # mail = Mail.objects.get(mailing=mailing)
+    #         # send_mailing(mail.subject_mail, mail.text_mail, clients)
+    #     return reverse('mailing:mailing_list')
+
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)
-        pk_mailing = self.object.pk
-        mailing = Mailing.objects.get(pk=pk_mailing)
+        mailing = Mailing.objects.get(pk=self.object.pk)
         if mailing.periodicity == 1:
             context_data['periodicity'] = 'Ежедневно'
         elif mailing.periodicity == 2:
@@ -56,7 +66,10 @@ class MailingDetailView(DetailView):
         elif mailing.periodicity == 3:
             context_data['periodicity'] = 'Ежемесячно'
 
-        context_data['subject_text'] = Mail.objects.get(pk=pk_mailing)
+        if Mail.objects.get(mailing=mailing) is not None:
+            context_data['mail_all'] = Mail.objects.get(mailing=mailing)
+        else:
+            context_data['mail_all'] = None
         return context_data
 
 
@@ -94,5 +107,3 @@ class MailingUpdateView(UpdateView):
 class MailingDeleteView(DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailing:mailing_list')
-
-

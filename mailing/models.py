@@ -18,10 +18,11 @@ class Client(models.Model):
 
 
 class Mailing(models.Model):
-    first_dispatch = models.DateField(auto_now=False, verbose_name='Дата первой отправки', **NULLABLE)
-    last_mailing = models.DateField(auto_now=False, verbose_name='Дата последней отправки', **NULLABLE)
+    name_dispatch = models.CharField(max_length=100, verbose_name='Наименование рассылки', unique=True)
+    first_dispatch = models.DateField(auto_now=False, verbose_name='Дата первой отправки')
+    last_mailing = models.DateField(auto_now=False, verbose_name='Дата последней отправки')
     periodicity = models.IntegerField(verbose_name='Периодичность')
-    status = models.CharField(max_length=15, verbose_name='Статус')
+    status = models.CharField(max_length=15, verbose_name='Статус', default='создана')
 
     def __str__(self):
         return f'{self.status} {self.periodicity} {self.first_dispatch}'
@@ -34,7 +35,7 @@ class Mailing(models.Model):
 class Mail(models.Model):
     subject_mail = models.CharField(max_length=100, verbose_name='Тема письма')
     text_mail = models.TextField(verbose_name='Текст письма')
-    mailing = models.OneToOneField('mailing.Mailing', verbose_name='Сообщение', on_delete=models.CASCADE, **NULLABLE)
+    mailing = models.OneToOneField('mailing.Mailing', verbose_name='Рассылка', on_delete=models.CASCADE)
 
     def __str__(self):
         return f'{self.subject_mail} {self.text_mail}'

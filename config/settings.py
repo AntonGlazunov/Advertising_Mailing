@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'mailing',
     'crispy_forms',
     'crispy_bootstrap4',
+    'django_apscheduler',
 ]
 
 MIDDLEWARE = [

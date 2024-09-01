@@ -8,7 +8,13 @@
                     <li class="list-group-item">{{ object.first_dispatch }}</li>
                     <li class="list-group-item">{{ object.first_dispatch }}</li>
                     <li class="list-group-item">{{ periodicity }}</li>
-                    <li class="list-group-item">{{ subject_text }}</li>
+                    {% if mail_all is not None %}
+                    <li class="list-group-item">{{ mail_all.subject_mail }}</li>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        <button name="send_mail" type="submit" class="btn btn-success">Начать рассылку</button>
+                    </form>
                 </ul>
             </div>
         </div>
