@@ -1,3 +1,5 @@
+import datetime
+
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy, reverse
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
@@ -44,17 +46,6 @@ class MailingListView(ListView):
 
 class MailingDetailView(DetailView):
     model = Mailing
-
-
-
-    # def post(self, request, pk):
-    #     if request.method == 'POST':
-    #         mailing = Mailing.objects.all()
-    #         print(mailing)
-    #         # clients = Client.objects.filter(mailing=mailing).values('contact_email')
-    #         # mail = Mail.objects.get(mailing=mailing)
-    #         # send_mailing(mail.subject_mail, mail.text_mail, clients)
-    #     return reverse('mailing:mailing_list')
 
     def get_context_data(self, **kwargs):
         context_data = super().get_context_data(**kwargs)

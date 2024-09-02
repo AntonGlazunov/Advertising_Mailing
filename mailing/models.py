@@ -38,7 +38,7 @@ class Mail(models.Model):
     mailing = models.OneToOneField('mailing.Mailing', verbose_name='Рассылка', on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.subject_mail} {self.text_mail}'
+        return f'{self.subject_mail} {self.text_mail} '
 
     class Meta:
         verbose_name = 'Письмо'
