@@ -47,7 +47,7 @@ class Mail(models.Model):
 
 class LastDispatch(models.Model):
     date_last_dispatch = models.DateField(auto_now=False, verbose_name='Дата последней отправки', **NULLABLE)
-    status = models.BooleanField(default=True, verbose_name='Статус отправки')
+    status = models.BooleanField(default=False, verbose_name='Статус отправки')
     mail_server_response = models.TextField(verbose_name='Ответ почтнового сервера', **NULLABLE)
     mailing = models.ForeignKey('mailing.Mailing', verbose_name='Рассылка',
                                       on_delete=models.CASCADE, **NULLABLE)

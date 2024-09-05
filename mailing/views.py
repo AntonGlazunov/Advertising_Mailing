@@ -1,10 +1,7 @@
-import datetime
-
 from django.forms import inlineformset_factory
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
-from mailing import scheduler
 from mailing.forms import MailingForm, MailForm, ClientForm
 from mailing.models import Mailing, Mail, Client
 from mailing.services import planning_mailing
