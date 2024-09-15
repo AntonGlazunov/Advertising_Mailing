@@ -1,43 +1,46 @@
 import datetime
 
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit
 from django import forms
 from django.forms import TextInput
 
 from mailing.models import Mailing, Mail, Client
 
 
-class VisualFormMixin:
+class StyleFormMixin:
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'post'
-        self.helper.form_action = 'submit_survey'
-        self.helper.form_tag = False
+        for field_name, field in self.fields.items():
+
+            if isinstance(field.widget, forms.widgets.CheckboxInput):
+                field.widget.attrs['class'] = 'form-check-input'
+            elif isinstance(field.widget, forms.DateTimeInput):
+                field.widget.attrs['class'] = 'form-control flatpickr-basic'
+            elif isinstance(field.widget, forms.DateInput):
+                field.widget.attrs['class'] = 'form-control datepicker'
+            elif isinstance(field.widget, forms.TimeInput):
+                field.widget.attrs['class'] = 'form-control flatpickr-time'
+            elif isinstance(field.widget, forms.widgets.SelectMultiple):
+                field.widget.attrs['class'] = 'form-control select2 select2-multiple'
+            elif isinstance(field.widget, forms.widgets.Select):
+                field.widget.attrs['class'] = 'form-control select2'
+            else:
+                field.widget.attrs['class'] = 'form-control'
 
 
-class MailingForm(VisualFormMixin, forms.ModelForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.helper.layout = Layout(
-            Fieldset('Рассылка', 'name_dispatch', 'first_dispatch', 'last_mailing', 'periodicity', ),
-            Submit('submit', 'Сохранить', css_class='button white'), )
-
+class MailingForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Mailing
-        fields = ('name_dispatch', 'first_dispatch', 'last_mailing', 'periodicity')
+        fields = ('name_dispatch', 'date_start_mailing', 'last_mailing', 'periodicity')
         widgets = {
-            'first_dispatch': TextInput(attrs={'placeholder': 'dd.mm.yyyy'}),
+            'date_start_mailing': TextInput(attrs={'placeholder': 'dd.mm.yyyy'}),
             'last_mailing': TextInput(attrs={'placeholder': 'dd.mm.yyyy'}),
             'periodicity': TextInput(
                 attrs={'placeholder': '1(ежедневно), 2(еженедельно), 3(ежемесячно)'}),
         }
 
     def clean_first_dispatch(self):
-        cleaned_data = self.cleaned_data.get('first_dispatch')
+        cleaned_data = self.cleaned_data.get('date_start_mailing')
         str_first_dispatch = str(cleaned_data)
         list_first_dispatch = str_first_dispatch.split('-')
         datetime_first_dispatch = datetime.date(int(list_first_dispatch[0]), int(list_first_dispatch[1]),
@@ -52,7 +55,7 @@ class MailingForm(VisualFormMixin, forms.ModelForm):
         list_last_mailing = str_last_mailing.split('-')
         datetime_last_mailing = datetime.date(int(list_last_mailing[0]), int(list_last_mailing[1]),
                                               int(list_last_mailing[2]))
-        first_dispatch = self.cleaned_data.get('first_dispatch')
+        first_dispatch = self.cleaned_data.get('date_start_mailing')
         str_first_dispatch = str(first_dispatch)
         list_first_dispatch = str_first_dispatch.split('-')
         datetime_first_dispatch = datetime.date(int(list_first_dispatch[0]), int(list_first_dispatch[1]),
@@ -68,7 +71,7 @@ class MailingForm(VisualFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class MailForm(VisualFormMixin, forms.ModelForm):
+class MailForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Mail
         fields = ('subject_mail', 'text_mail')
@@ -80,7 +83,7 @@ class MailForm(VisualFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class ClientForm(forms.ModelForm):
+class ClientForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Client
         fields = ('contact_email', 'full_name', 'comment')

@@ -5,7 +5,7 @@
 <div class="col">
     <div class="card shadow-sm">
         <div class="card-body">
-            <p class="card-text"> Начало рассылки: {{ mailing.first_dispatch }}, Окончание рассылки: {{ mailing.last_mailing }} </p>
+            <p class="card-text"> Начало рассылки: {{ mailing.date_start_mailing }}, Окончание рассылки: {{ mailing.last_mailing }} </p>
             <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a class="btn btn-sm btn-outline-secondary" href="{% url 'mailing:detail_mailing' mailing.pk %}">Посмотреть</a>

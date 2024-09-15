@@ -21,9 +21,9 @@ class Command(BaseCommand):
                   fail_silently=False, )
 
     def handle(self, *args, **options):
-        mailings = Mailing.objects.all()
+        mailings = Mailing.objects.exclude(status='завершена')
         for mailing in mailings:
-            str_last_mailing = str(mailing.last_mailing)
+            str_last_mailing = str(mailing.date_start_mailing)
             list_last_mailing = str_last_mailing.split('-')
             datetime_last_mailing = datetime.date(int(list_last_mailing[0]), int(list_last_mailing[1]),
                                                     int(list_last_mailing[2]))

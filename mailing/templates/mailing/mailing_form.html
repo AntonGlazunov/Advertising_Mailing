@@ -1,5 +1,4 @@
 {% extends 'mailing/base.html' %}
-{% load crispy_forms_tags %}
 
 {% block content %}
 <div class="col-12">
@@ -9,7 +8,8 @@
             <div class="col-4">
                 <div class="card">
                     <div class="card-body">
-                        {% crispy form %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-success">Сохранить</button>
                     </div>
                 </div>
             </div>
@@ -18,7 +18,7 @@
                     <div class="card-body">
                         {{ formset_mail.management_form }}
                         {% for form in formset_mail.forms %}
-                        {% crispy form %}
+                        {{ form.as_p }}
                         {% endfor %}
                     </div>
                 </div>
@@ -28,7 +28,7 @@
                     <div class="card-body">
                         {{ formset_client.management_form }}
                         {% for form in formset_client.forms %}
-                        {% crispy form %}
+                        {{ form.as_p }}
                         {% endfor %}
                     </div>
                 </div>

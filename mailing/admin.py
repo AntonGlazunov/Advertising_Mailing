@@ -10,7 +10,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Mailing)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('first_dispatch', 'last_mailing', 'periodicity',)
+    list_display = ('date_start_mailing', 'last_mailing', 'periodicity', 'status')
 
 
 @admin.register(Mail)

@@ -1,9 +1,11 @@
+from datetime import date
+
 from django.forms import inlineformset_factory
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
 from mailing.forms import MailingForm, MailForm, ClientForm
-from mailing.models import Mailing, Mail, Client
+from mailing.models import Mailing, Mail, Client, LastDispatch
 from mailing.services import planning_mailing
 
 
@@ -33,7 +35,7 @@ class MailingCreateView(CreateView):
             formset_mail.save()
             formset_client.instance = self.object
             formset_client.save()
-            planning_mailing(self.object)
+            planning_mailing()
         return super().form_valid(form)
 
 
