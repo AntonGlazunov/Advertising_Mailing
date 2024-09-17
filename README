@@ -1,0 +1,2 @@
+Команда для запуска рассылки в ручную
+python manage.py start_mailing.py

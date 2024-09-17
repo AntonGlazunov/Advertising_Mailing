@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'mailing',
+    'user',
     'crispy_forms',
     'crispy_bootstrap4',
     'django_apscheduler',
@@ -155,11 +156,11 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-# AUTH_USER_MODEL = 'users.User'
-# LOGIN_REDIRECT_URL = '/'
-# LOGOUT_REDIRECT_URL = '/'
+AUTH_USER_MODEL = 'user.User'
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
-# LOGIN_URL = 'users:login'
+LOGIN_URL = 'user:login'
 
 CACHE_ENABLE = os.getenv('CACHE_ENABLE') == 'True'
 
