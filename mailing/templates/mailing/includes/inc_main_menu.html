@@ -7,6 +7,10 @@
                         <a class="nav-link active" aria-current="page"
                            href="{% url 'mailing:home' %}">Главная</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page"
+                           href="{% url 'blog:blog_list' %}">Блог</a>
+                    </li>
                     {% if user.is_content_manager %}
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page"

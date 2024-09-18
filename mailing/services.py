@@ -2,9 +2,11 @@ from datetime import date
 
 from apscheduler.schedulers.background import BackgroundScheduler
 from dateutil.relativedelta import relativedelta
+from django.core.cache import cache
 from django.core.mail import send_mail
 from django_apscheduler.jobstores import DjangoJobStore
 
+from blog.models import Blog
 from config import settings
 from mailing.models import Client, Mailing, LastDispatch, Mail
 
@@ -76,7 +78,6 @@ def send_mailing(mailings):
                 mailing.save()
 
 
-
 def planning_mailing():
     if len(scheduler.get_jobs()) == 0:
         scheduler.add_job(start_mailing, 'interval', minutes=2)
@@ -87,3 +88,51 @@ def start_mailing():
     mailings = Mailing.objects.exclude(status='завершена').filter(date_start_mailing=date.today(), is_active=True)
     if len(mailings) > 0:
         send_mailing(mailings)
+
+
+def cash_articles():
+    if settings.CACHE_ENABLE:
+        key = f'blog_list'
+        article_list = cache.get(key)
+        if article_list is None:
+            articles = Blog.objects.all()
+            article_list = []
+            for article in articles:
+                article_list.append(article)
+            cache.set(key, article_list)
+    else:
+        articles = Blog.objects.all()
+        article_list = []
+        for article in articles:
+            article_list.append(article)
+
+    cash_blog = article_list
+    return cash_blog
+
+
+def cash_mailing():
+    if settings.CACHE_ENABLE:
+        key = f'mailing_list'
+        mailing_list = cache.get(key)
+        if mailing_list is None:
+            mailing_list = Mailing.objects.all()
+            cache.set(key, mailing_list)
+    else:
+        mailing_list = Mailing.objects.all()
+
+    cash_mailings = mailing_list
+    return cash_mailings
+
+
+def cash_client():
+    if settings.CACHE_ENABLE:
+        key = f'client_list'
+        client_list = cache.get(key)
+        if client_list is None:
+            client_list = len(Client.objects.distinct('contact_email'))
+            cache.set(key, client_list)
+    else:
+        client_list = len(Client.objects.distinct('contact_email'))
+
+    cash_clients = client_list
+    return cash_clients
