@@ -1,10 +1,14 @@
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from random import shuffle
+
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
+from blog.models import Blog
 from mailing.forms import MailingForm, MailForm, ClientForm, MailingModerForm
 from mailing.models import Mailing, Mail, Client
 from mailing.services import planning_mailing
@@ -119,3 +123,20 @@ class MailingDeleteView(LoginRequiredMixin, DeleteView):
         else:
             return HttpResponseRedirect(success_url)
 
+
+def home(request):
+    quantity_mailing_all = len(Mailing.objects.all())
+    quantity_mailing_active = len(Mailing.objects.exclude(status='завершена').filter(is_active=True))
+    unique_client = len(Client.objects.distinct('contact_email'))
+    articles = Blog.objects.all()
+    list_articles = []
+    for article in articles:
+        list_articles.append(article)
+    shuffle(list_articles)
+    context = {
+        'mailing_all': quantity_mailing_all,
+        'mailing_active': quantity_mailing_active,
+        'unique_client': unique_client,
+        'articles': list_articles[:3]
+    }
+    return render(request, 'mailing/home.html', context)

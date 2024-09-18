@@ -1,0 +1,32 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+
+<div class="col-12">
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Рассылки</h5>
+            <p class="card-text">Колличество рассылок: {{ mailing_all }}</p>
+            <p>Колличество активных рассылок: {{ mailing_active }}</p>
+            <p>Колличество уникальных клиентов для рассылок: {{ unique_client }}</p>
+            <a href="{% url 'mailing:mailing_list' %}" class="card-link">Детали</a>
+        </div>
+    </div>
+</div>
+{% for article in articles %}
+<div class="col-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">{{ article.title }}</h5>
+            <div class="btn-group">
+                <a href="{% url 'blog:blog_detail' article.pk %}" class="btn btn-primary active" aria-current="page">Прочитать</a>
+                {% if user.is_content_manager %}
+                <a href="{% url 'blog:update_blog' article.pk %}" class="btn btn-primary">Отредактировать</a>
+                <a href="{% url 'blog:delete' article.pk %}" class="btn btn-primary">Удалить</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

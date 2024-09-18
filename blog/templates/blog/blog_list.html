@@ -1,0 +1,24 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+
+<main class="row">
+    {% for blog in object_list %}
+    <div class="col">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ blog.title }}</h5>
+
+                <div class="btn-group">
+                    <a href="{% url 'blog:blog_detail' blog.pk %}" class="btn btn-primary active" aria-current="page">Прочитать</a>
+                    {% if user.is_content_manager %}
+                    <a href="{% url 'blog:update_blog' blog.pk %}" class="btn btn-primary">Отредактировать</a>
+                    <a href="{% url 'blog:delete' blog.pk %}" class="btn btn-primary">Удалить</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</main>
+{% endblock %}

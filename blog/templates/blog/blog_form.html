@@ -1,0 +1,18 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+
+<div class="col-12">
+    <div class="row">
+        <form method="post" enctype="multipart/form-data">
+            <div class="card">
+                <div class="card-body">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input type="submit" name="submit" value="Сохранить" class="btn btn-primary">`
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

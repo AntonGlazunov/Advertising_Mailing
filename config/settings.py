@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     'mailing',
     'user',
+    'blog',
     'crispy_forms',
     'crispy_bootstrap4',
     'django_apscheduler',
