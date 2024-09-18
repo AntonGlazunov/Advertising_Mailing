@@ -1,15 +1,16 @@
-from datetime import date
-
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.exceptions import PermissionDenied
 from django.forms import inlineformset_factory
+from django.http import HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
 
-from mailing.forms import MailingForm, MailForm, ClientForm
-from mailing.models import Mailing, Mail, Client, LastDispatch
+from mailing.forms import MailingForm, MailForm, ClientForm, MailingModerForm
+from mailing.models import Mailing, Mail, Client
 from mailing.services import planning_mailing
 
 
-class MailingCreateView(CreateView):
+class MailingCreateView(LoginRequiredMixin, CreateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing:mailing_list')
@@ -30,12 +31,15 @@ class MailingCreateView(CreateView):
         formset_client = self.get_context_data()['formset_client']
         formset_mail = self.get_context_data()['formset_mail']
         self.object = form.save()
+        mailing = form.save(commit=False)
+        mailing.user = self.request.user
+        mailing.save()
+        planning_mailing()
         if formset_mail.is_valid() and formset_client.is_valid():
             formset_mail.instance = self.object
             formset_mail.save()
             formset_client.instance = self.object
             formset_client.save()
-            planning_mailing()
         return super().form_valid(form)
 
 
@@ -43,7 +47,7 @@ class MailingListView(ListView):
     model = Mailing
 
 
-class MailingDetailView(DetailView):
+class MailingDetailView(LoginRequiredMixin, DetailView):
     model = Mailing
 
     def get_context_data(self, **kwargs):
@@ -63,7 +67,7 @@ class MailingDetailView(DetailView):
         return context_data
 
 
-class MailingUpdateView(UpdateView):
+class MailingUpdateView(LoginRequiredMixin, UpdateView):
     model = Mailing
     form_class = MailingForm
     success_url = reverse_lazy('mailing:mailing_list')
@@ -93,7 +97,25 @@ class MailingUpdateView(UpdateView):
 
         return super().form_valid(form)
 
+    def get_form_class(self):
+        user = self.request.user
+        if user == self.object.user or user.is_superuser:
+            return MailingForm
+        elif user.has_perm('mailing.set_mailing'):
+            return MailingModerForm
+        else:
+            raise PermissionDenied
 
-class MailingDeleteView(DeleteView):
+
+class MailingDeleteView(LoginRequiredMixin, DeleteView):
     model = Mailing
     success_url = reverse_lazy('mailing:mailing_list')
+
+    def form_valid(self, form):
+        user = self.request.user
+        success_url = self.get_success_url()
+        if self.object.user == user or user.is_superuser:
+            return super().form_valid(form)
+        else:
+            return HttpResponseRedirect(success_url)
+

@@ -1,15 +1,17 @@
 from django.contrib.auth import login
+from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.views import PasswordResetView, LoginView
+from django.core.exceptions import PermissionDenied
 from django.core.mail import send_mail
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.views import View
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DetailView
 
-from user.forms import UserRegisterForm, UserProfileForm, UserForgotPasswordForm, UserAuthenticationForm
+from user.forms import UserRegisterForm, UserProfileForm, UserForgotPasswordForm, UserAuthenticationForm, UserModerForm
 from user.models import User
 
 
@@ -110,5 +112,21 @@ class ProfileView(UpdateView):
         return self.request.user
 
 
+
+
+
 class UserLoginView(LoginView):
     form_class = UserAuthenticationForm
+
+
+class UserListView(ListView):
+    model = User
+
+
+class UserUpdateView(UpdateView):
+    model = User
+    form_class = UserModerForm
+    template_name = 'user/user_form.html'
+    success_url = reverse_lazy('mailing:mailing_list')
+
+

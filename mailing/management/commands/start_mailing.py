@@ -2,7 +2,6 @@ import datetime
 
 from django.core.mail import send_mail
 from django.core.management import BaseCommand
-from django.db.models import Q
 
 from config import settings
 from mailing.models import Mail, Client, Mailing
@@ -21,12 +20,12 @@ class Command(BaseCommand):
                   fail_silently=False, )
 
     def handle(self, *args, **options):
-        mailings = Mailing.objects.exclude(status='завершена')
+        mailings = Mailing.objects.filter(is_active=True).exclude(status='завершена')
         for mailing in mailings:
             str_last_mailing = str(mailing.date_start_mailing)
             list_last_mailing = str_last_mailing.split('-')
             datetime_last_mailing = datetime.date(int(list_last_mailing[0]), int(list_last_mailing[1]),
-                                                    int(list_last_mailing[2]))
+                                                  int(list_last_mailing[2]))
             if datetime_last_mailing >= datetime.date.today():
                 Command.send_mailing(mailing)
                 print('рассылка выполнена')

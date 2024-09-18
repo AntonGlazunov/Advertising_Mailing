@@ -104,4 +104,17 @@ class UserForgotPasswordForm(StyleFormMixin, PasswordResetForm):
 
 
 class UserAuthenticationForm(StyleFormMixin, AuthenticationForm):
-    pass
+
+    def clean(self):
+        username = self.cleaned_data.get('username')
+        user_ = User.objects.get(email=username)
+        if user_.is_block:
+            raise forms.ValidationError('Пользователь заблокирован')
+        return super().clean()
+
+
+class UserModerForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('is_block',)
+

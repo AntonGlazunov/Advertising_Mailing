@@ -87,3 +87,12 @@ class ClientForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Client
         fields = ('contact_email', 'full_name', 'comment')
+
+
+class MailingModerForm(StyleFormMixin, forms.ModelForm):
+    class Meta:
+        model = Mailing
+        fields = ('is_active', )
+
+
+

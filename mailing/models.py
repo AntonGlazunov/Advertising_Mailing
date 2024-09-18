@@ -23,11 +23,19 @@ class Mailing(models.Model):
     last_mailing = models.DateField(auto_now=False, verbose_name='Дата последней отправки')
     periodicity = models.IntegerField(verbose_name='Периодичность')
     status = models.CharField(max_length=15, verbose_name='Статус', default='создана')
+    is_active = models.BooleanField(default=True, verbose_name='Разрешение на запуск рассылки')
+    user = models.ForeignKey('user.User', verbose_name='Владелец', on_delete=models.CASCADE, **NULLABLE)
 
     def __str__(self):
         return f'{self.status} {self.periodicity} {self.date_start_mailing}'
 
     class Meta:
+        permissions = [
+            (
+                'set_mailing',
+                'Отмена рассылки'
+            )
+        ]
         verbose_name = 'Рассылка'
         verbose_name_plural = 'Рассылки'
 
